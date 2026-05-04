@@ -419,7 +419,7 @@
     <!-- 2. SCRIPT DE FIREBASE (Base de datos en la nube) -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
-        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBcRbQEBYDmiHVz-CPLYKslc3GIKT1NSiQ",
@@ -433,7 +433,32 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // Conectamos la función al botón del HTML
+        // --- FUNCIÓN PARA CARGAR RESEÑAS EXISTENTES ---
+        async function loadReviews() {
+            const reviewsWall = document.getElementById('reviews-wall');
+            reviewsWall.innerHTML = '<div class="reseña-card"><b>@Admin:</b> Cargando reseñas de la nube...</div>';
+            
+            try {
+                const q = query(collection(db, "resenas"), orderBy("fecha", "desc"));
+                const querySnapshot = await getDocs(q);
+                reviewsWall.innerHTML = ""; // Limpiar mensaje de carga
+                
+                querySnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    const card = document.createElement('div');
+                    card.className = 'reseña-card';
+                    card.innerHTML = `<b>@${data.usuario}:</b> ${data.comentario}`;
+                    reviewsWall.appendChild(card);
+                });
+            } catch (e) {
+                console.error("Error cargando: ", e);
+            }
+        }
+
+        // Cargar al iniciar
+        loadReviews();
+
+        // --- FUNCIÓN PARA PUBLICAR ---
         window.addReview = async function() {
             const name = document.getElementById('rev-name').value;
             const text = document.getElementById('rev-text').value;
@@ -444,25 +469,19 @@
             }
 
             try {
-                // Guardar en Firebase
                 await addDoc(collection(db, "resenas"), {
                     usuario: name,
                     comentario: text,
                     fecha: new Date()
                 });
                 
-                // Mostrar en pantalla
-                const card = document.createElement('div');
-                card.className = 'reseña-card';
-                card.innerHTML = `<b>@${name}:</b> ${text}`;
-                document.getElementById('reviews-wall').prepend(card);
+                // Recargar el muro automáticamente para ver la nueva reseña
+                loadReviews();
                 
                 document.getElementById('rev-name').value = "";
                 document.getElementById('rev-text').value = "";
-                
                 alert("¡Reseña guardada en la nube!");
             } catch (e) {
-                console.error("Error: ", e);
                 alert("Error al conectar con la base de datos.");
             }
         }
