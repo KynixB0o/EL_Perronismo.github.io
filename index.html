@@ -417,7 +417,7 @@
     </script>
 
     <!-- 2. SCRIPT DE FIREBASE (Base de datos en la nube) -->
-    <script type="module">
+<script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
         import { getFirestore, collection, addDoc, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
 
@@ -433,15 +433,16 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // --- FUNCIÓN PARA CARGAR RESEÑAS EXISTENTES ---
+        // --- ESTA ES LA PARTE QUE TE FALTA (LA LECTURA) ---
         async function loadReviews() {
             const reviewsWall = document.getElementById('reviews-wall');
-            reviewsWall.innerHTML = '<div class="reseña-card"><b>@Admin:</b> Cargando reseñas de la nube...</div>';
+            if(!reviewsWall) return;
             
             try {
+                // Trae las reseñas ordenadas por fecha
                 const q = query(collection(db, "resenas"), orderBy("fecha", "desc"));
                 const querySnapshot = await getDocs(q);
-                reviewsWall.innerHTML = ""; // Limpiar mensaje de carga
+                reviewsWall.innerHTML = ""; 
                 
                 querySnapshot.forEach((doc) => {
                     const data = doc.data();
@@ -451,11 +452,11 @@
                     reviewsWall.appendChild(card);
                 });
             } catch (e) {
-                console.error("Error cargando: ", e);
+                console.error("Error al cargar reseñas: ", e);
             }
         }
 
-        // Cargar al iniciar
+        // Ejecutar la carga apenas abra la página
         loadReviews();
 
         // --- FUNCIÓN PARA PUBLICAR ---
@@ -475,14 +476,14 @@
                     fecha: new Date()
                 });
                 
-                // Recargar el muro automáticamente para ver la nueva reseña
+                // Recargar el muro para ver la nueva reseña sin refrescar toda la página
                 loadReviews();
                 
                 document.getElementById('rev-name').value = "";
                 document.getElementById('rev-text').value = "";
                 alert("¡Reseña guardada en la nube!");
             } catch (e) {
-                alert("Error al conectar con la base de datos.");
+                alert("Error al guardar la reseña.");
             }
         }
     </script>
