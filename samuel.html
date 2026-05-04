@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>elperronismo</title>
+   
+    <style>
+        body {
+            background: #1a1a2e;
+            color: #e0e0e0;
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            overflow-x: hidden;
+            position: relative;
+            min-height: 2500px;
+        }
+
+        /* --- ANIMACIÓN MAESTRA ARCOÍRIS --- */
+        @keyframes rainbow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .arcoiris-text {
+            background: linear-gradient(90deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8f00ff, #ff0000);
+            background-size: 300% 300%;
+            color: transparent;
+            -webkit-background-clip: text;
+            background-clip: text;
+            animation: rainbow 5s ease infinite;
+        }
+
+        /* --- TÍTULO LEGENDARIO --- */
+        h1 {
+            font-size: 3.5em;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: baseline;
+            gap: 15px;
+            flex-wrap: wrap; 
+        }
+
+        .alias-text {
+            font-size: 0.35em;
+            font-style: italic;
+        }
+
+        /* --- UI AUDIO VERTICAL ESTÉTICA --- */
+        #ui-audio {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            background: rgba(22, 33, 62, 0.95);
+            padding: 15px 8px;
+            border: 2px solid #e91e63;
+            border-radius: 40px;
+            z-index: 100;
+            box-shadow: 0 0 20px rgba(233, 30, 99, 0.4);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+
+        #ui-audio label {
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            font-size: 9px;
+            letter-spacing: 2px;
+            color: #4cc9f0;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        #vol {
+            -webkit-appearance: none;
+            width: 100px;
+            height: 6px;
+            background: #0f3460;
+            border-radius: 5px;
+            outline: none;
+            transform: rotate(-90deg);
+            margin: 40px 0;
+            cursor: pointer;
+        }
+
+        #vol::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            background: #e91e63;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #e91e63;
+            cursor: pointer;
+            border: 2px solid #fff;
+        }
+
+        .game-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 20px;
+        }
+
+        .lore-column {
+            background: rgba(22, 33, 62, 0.7);
+            padding: 30px;
+            border-radius: 15px;
+            border-left: 5px solid #e91e63;
+            text-align: left;
+        }
+
+        h2 { border-bottom: 2px solid #0f3460; padding-bottom: 5px; color: #4cc9f0; margin-top: 30px; }
+
+        /* --- BARRAS DE STATS --- */
+        .stat-bar {
+            background: #0f3460;
+            border-radius: 10px;
+            margin: 10px 0;
+            height: 25px;
+            position: relative;
+            overflow: hidden;
+        }
+        .stat-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff4d6d, #e91e63);
+            width: 95%;
+        }
+        .stat-label { position: absolute; left: 10px; font-weight: bold; font-size: 14px; line-height: 25px; }
+
+        /* --- INFOBOX --- */
+        .character-card {
+            background: #16213e;
+            border: 3px solid #e91e63;
+            border-radius: 20px;
+            padding: 15px;
+            position: sticky;
+            top: 20px;
+            text-align: center;
+        }
+        .img-main { width: 100%; border-radius: 10px; margin-bottom: 15px; box-shadow: 0 0 20px rgba(233, 30, 99, 0.5); cursor: pointer; }
+        .data-table { width: 100%; font-size: 14px; border-collapse: collapse; margin-bottom: 20px; }
+        .data-table td { padding: 8px; border-bottom: 1px solid #0f3460; text-align: left; }
+        .data-table b { color: #4cc9f0; }
+
+        .mini-fotos-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .mini-foto {
+            width: 100%; height: 100px; object-fit: cover; border-radius: 8px; border: 1px solid #e91e63; cursor: pointer; transition: 0.2s;
+        }
+        .mini-foto:hover { transform: scale(1.05); border-color: white; }
+
+        /* --- MULTIMEDIA --- */
+        .galeria-fotos {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .galeria-fotos img {
+            width: 100%; height: 150px; object-fit: cover; border-radius: 10px; border: 2px solid #4cc9f0; transition: transform 0.3s; cursor: pointer;
+        }
+        .galeria-fotos img:hover { transform: scale(1.05); }
+
+        /* --- SECCIÓN VIDEOS --- */
+        .video-wall {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .video-container {
+            background: rgba(0,0,0,0.3);
+            padding: 10px;
+            border-radius: 12px;
+            border: 1px solid #0f3460;
+            text-align: center;
+        }
+
+        .video-box {
+            width: 100%;
+            border: 2px solid #e91e63;
+            border-radius: 10px;
+            display: block;
+        }
+
+        /* --- RESEÑAS --- */
+        .review-input-area {
+            background: rgba(15, 52, 96, 0.6);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .review-input-area input, .review-input-area textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            background: #1a1a2e;
+            border: 1px solid #4cc9f0;
+            color: white;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        .btn-review {
+            background: #e91e63;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .reseña-card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border-left: 3px solid #4cc9f0;
+        }
+
+        /* --- STICKERS --- */
+        .sticker {
+            position: absolute;
+            cursor: pointer;
+            border: 3px solid #e91e63;
+            border-radius: 50%;
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            transition: 0.3s;
+            z-index: 50;
+        }
+        .sticker:hover { transform: scale(1.2) rotate(15deg); box-shadow: 0 0 30px #e91e63; }
+       
+        #s1 { top: 150px; left: 20px; }
+        #s2 { top: 550px; left: 20px; }
+        #s3 { top: 950px; left: 20px; }
+        #s4 { top: 1350px; left: 20px; }
+        #s5 { top: 1750px; left: 20px; }
+        #s6 { top: 2150px; left: 20px; }
+
+        /* --- LIGHTBOX --- */
+        #lightbox {
+            display: none; position: fixed; z-index: 999; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); justify-content: center; align-items: center; cursor: zoom-out;
+        }
+        #lightbox img { max-width: 90%; max-height: 90%; border: 3px solid white; border-radius: 10px; }
+
+        @media (max-width: 850px) {
+            body { padding: 10px; }
+            h1 { font-size: 2.2em; gap: 5px; }
+            .game-container { grid-template-columns: 1fr; }
+            .character-card { position: relative; top: 0; margin-bottom: 20px; order: -1; }
+            .video-wall { grid-template-columns: 1fr; }
+            .sticker { width: 70px; height: 70px; left: 5px; opacity: 0.6; }
+            .lore-column { padding: 20px; margin-left: 15px; }
+            #ui-audio { top: 10px; right: 10px; padding: 10px 5px; }
+            #vol { width: 70px; margin: 25px 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="lightbox" onclick="this.style.display='none'">
+        <img src="" id="lightbox-img">
+    </div>
+
+    <div id="ui-audio">
+        <label>VOLUME</label>
+        <input type="range" id="vol" min="0" max="1" step="0.1" value="0.5">
+    </div>
+
+    <div class="game-container">
+        <div class="lore-column">
+            <h1 class="arcoiris-text">SAMUEL <span class="alias-text">alias ElPerronismo</span></h1>
+           
+            <p><i>"Un aliado legendario que aparece en los momentos de crisis y en las mejores fiestas."</i></p>
+           
+            <h2>Estadísticas de Personaje</h2>
+            <p>Amistad:</p>
+            <div class="stat-bar"><div class="stat-fill" style="width: 100%;"></div><div class="stat-label">MAX LVL</div></div>
+           
+            <p>Lealtad:</p>
+            <div class="stat-bar"><div class="stat-fill" style="width: 98%;"></div><div class="stat-label">98/100</div></div>
+
+            <p>Paciencia:</p>
+            <div class="stat-bar">
+                <div class="stat-fill" style="width: 30%; background: #DE3163 ;"></div>
+                <div class="stat-label">30/100</div>
+            </div>
+
+            <h2>Historia de Origen</h2>
+            <p>Este personaje fue desbloqueado en el mapa de <b>liceo 2018</b>. Tras completar misiones de risas, se unió permanentemente a la party principal.</p>
+
+            <h2>Habilidades Especiales</h2>
+            <ul>
+                <li><b>Resistencia Legendaria:</b> Capaz de escuchar los problemas por horas sin importar si es lo mismo de siempre.</li>
+                <li><b>Invocación de Risas:</b> +90% de probabilidad de decir una babosada.</li>
+            </ul>
+
+            <h2>Debilidades (Debuffs)</h2>
+            <ul>
+                <li><b>Cero paciencia con gente pendeja:</b> Al detectar una pendejada extrema su paciencia baja instantaneamente a 0.</li>
+                <li><b>Kriptonita:</b> Torta de auyama y las mujeres bajitas, morenas/blancas, que usen lentes y de cabello corto.</li>
+            </ul>
+
+            <h2>Galería de Imágenes</h2>
+            <div class="galeria-fotos">
+                <img src="furro.jpg.jpeg" alt="Foto 1" onclick="openImg(this.src)">
+                <img src="amimegustalapepsi.jpeg" alt="Foto 2" onclick="openImg(this.src)">
+                <img src="pdjsnodurannada.jpeg" alt="Foto 3" onclick="openImg(this.src)">
+                <img src="ltanga.jpeg" alt="Foto 4" onclick="openImg(this.src)">
+                <img src="losniños.jpeg" alt="Extra 1" onclick="openImg(this.src)">
+                <img src="RobloxScreenShot20260307_005510959.png" alt="Extra 2" onclick="openImg(this.src)">
+                <img src="samuelmyyo.png" alt="Extra 3" onclick="openImg(this.src)">
+                <img src="bikini.jpeg" alt="Extra 4" onclick="openImg(this.src)">
+            </div>
+
+            <h2>Registros de Video</h2>
+           
+            <div class="video-wall">
+                <div class="video-container">
+                    <p><b>Misión 1:</b></p>
+                    <video class="video-box" controls><source src="ti.mp4.mp4" type="video/mp4"></video>
+                </div>
+                <div class="video-container">
+                    <p><b>Misión 2:</b></p>
+                    <video class="video-box" controls><source src="WhatsApp Video 2026-02-15 at 1.25.29 PM.mp4" type="video/mp4"></video>
+                </div>
+                <div class="video-container">
+                    <p><b>Misión 3:</b></p>
+                    <video class="video-box" controls><source src="valiente.mp4" type="video/mp4"></video>
+                </div>
+                <div class="video-container">
+                    <p><b>Misión 4:</b></p>
+                    <video class="video-box" controls><source src="pinguinogei.mp4" type="video/mp4"></video>
+                </div>
+                <div class="video-container">
+                    <p><b>Misión 5:</b></p>
+                    <video class="video-box" controls><source src="travesti.mp4" type="video/mp4"></video>
+                </div>
+                <div class="video-container">
+                    <p><b>Misión 6:</b></p>
+                    <video class="video-box" controls><source src="samuelrotatorio.mp4" type="video/mp4"></video>
+                </div>
+            </div>
+
+            <h2>Muro de Reseñas</h2>
+            <div class="review-input-area">
+                <input type="text" id="rev-name" placeholder="Tu nombre o alias...">
+                <textarea id="rev-text" placeholder="Escribe tu reseña sobre el legendario..."></textarea>
+                <button class="btn-review" onclick="addReview()">Publicar Reseña</button>
+            </div>
+            <div id="reviews-wall">
+                <div class="reseña-card"><b>@Admin:</b> El sistema de reseñas está online.</div>
+            </div>
+        </div>
+
+        <div class="character-card">
+            <img src="eeeeee.jpeg" class="img-main" alt="Avatar" onclick="openImg(this.src)">
+            <table class="data-table">
+                <tr><td><b>Clase:</b></td><td>Mejor Amigo / Tanque</td></tr>
+                <tr><td><b>Cumpleaños:</b></td><td>02 de Mayo</td></tr>
+                <tr><td><b>Rango:</b></td><td>S+ (Legendario)</td></tr>
+            </table>
+
+            <h3 style="color: #4cc9f0; font-size: 14px; text-transform: uppercase; margin-bottom: 5px;">Equipamiento / Fotos</h3>
+            <div class="mini-fotos-grid">
+                <img src="triodeoror.jpeg" class="mini-foto" onclick="openImg(this.src)">
+                <img src="unacaradeogtmecargo.jpeg" class="mini-foto" onclick="openImg(this.src)">
+                <img src="bigote.jpeg" class="mini-foto" onclick="openImg(this.src)">
+                <img src="batmanaraña.jpeg" class="mini-foto" onclick="openImg(this.src)">
+                <img src="dehecho.jpg" class="mini-foto" onclick="openImg(this.src)">
+                <img src="sixd.jpg" class="mini-foto" onclick="openImg(this.src)">
+            </div>
+        </div>
+    </div>
+
+    <img src="mibro1.jpg" id="s1" class="sticker" onclick="playSfx('risa.mp3')">
+    <img src="mibro4.jpg" id="s2" class="sticker" onclick="playSfx('meme.mp3')">
+    <img src="voyeur aesthetic.jpg" id="s3" class="sticker" onclick="playSfx('audio3.mp3')">
+    <img src="jijiji.jpg" id="s4" class="sticker" onclick="playSfx('audio4.mp3')">
+    <img src="titititit.jpg" id="s5" class="sticker" onclick="playSfx('audio5.mp3')">
+    <img src="descarga.jpg" id="s6" class="sticker" onclick="playSfx('audio6.mp3')">
+
+    <audio id="bgm" src="YTDown.com_YouTube_001-Once-Upon-a-Time-UNDERTALE-Soundtrac_Media_0AQMAth2gio_008_128k.m4a" loop></audio>
+    <audio id="sfx"></audio>
+
+    <!-- 1. SCRIPT GENERAL (Audio y Lightbox) -->
+    <script>
+        const bgm = document.getElementById('bgm');
+        const sfx = document.getElementById('sfx');
+        const volControl = document.getElementById('vol');
+        const videos = document.querySelectorAll('video');
+
+        document.body.onclick = () => { if(bgm.paused) { bgm.play(); bgm.volume = volControl.value; } };
+        volControl.oninput = (e) => { bgm.volume = e.target.value; };
+        videos.forEach(v => {
+            v.onplay = () => { bgm.volume = volControl.value * 0.1; };
+            v.onpause = () => { bgm.volume = volControl.value; };
+            v.onended = () => { bgm.volume = volControl.value; };
+        });
+        function playSfx(src) { sfx.src = src; sfx.play(); }
+        function openImg(src) {
+            const lb = document.getElementById('lightbox');
+            document.getElementById('lightbox-img').src = src;
+            lb.style.display = 'flex';
+        }
+    </script>
+
+    <!-- 2. SCRIPT DE FIREBASE (Base de datos en la nube) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
+        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBcRbQEBYDmiHVz-CPLYKslc3GIKT1NSiQ",
+            authDomain: "elperronismo-web.firebaseapp.com",
+            projectId: "elperronismo-web",
+            storageBucket: "elperronismo-web.firebasestorage.app",
+            messagingSenderId: "904756395919",
+            appId: "1:904756395919:web:a4d9e7fa0a6843fbb295fa"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Conectamos la función al botón del HTML
+        window.addReview = async function() {
+            const name = document.getElementById('rev-name').value;
+            const text = document.getElementById('rev-text').value;
+
+            if (name === "" || text === "") { 
+                alert("¡Escribe algo primero!"); 
+                return; 
+            }
+
+            try {
+                // Guardar en Firebase
+                await addDoc(collection(db, "resenas"), {
+                    usuario: name,
+                    comentario: text,
+                    fecha: new Date()
+                });
+                
+                // Mostrar en pantalla
+                const card = document.createElement('div');
+                card.className = 'reseña-card';
+                card.innerHTML = `<b>@${name}:</b> ${text}`;
+                document.getElementById('reviews-wall').prepend(card);
+                
+                document.getElementById('rev-name').value = "";
+                document.getElementById('rev-text').value = "";
+                
+                alert("¡Reseña guardada en la nube!");
+            } catch (e) {
+                console.error("Error: ", e);
+                alert("Error al conectar con la base de datos.");
+            }
+        }
+    </script>
+
+</body>
+</html>

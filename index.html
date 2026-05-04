@@ -1,10 +1,10 @@
-html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>elperronismo</title>
-    
+   
     <style>
         body {
             background: #1a1a2e;
@@ -13,8 +13,8 @@ html>
             margin: 0;
             padding: 20px;
             overflow-x: hidden;
-            position: relative; 
-            min-height: 2500px; /* Aumentado para permitir el scroll largo de stickers */
+            position: relative;
+            min-height: 2500px;
         }
 
         /* --- ANIMACIÓN MAESTRA ARCOÍRIS --- */
@@ -34,16 +34,17 @@ html>
         }
 
         /* --- TÍTULO LEGENDARIO --- */
-        h1 { 
-            font-size: 3.5em; 
-            margin-bottom: 10px; 
+        h1 {
+            font-size: 3.5em;
+            margin-bottom: 10px;
             display: flex;
             align-items: baseline;
             gap: 15px;
+            flex-wrap: wrap; 
         }
 
         .alias-text {
-            font-size: 0.35em; 
+            font-size: 0.35em;
             font-style: italic;
         }
 
@@ -64,31 +65,31 @@ html>
             gap: 5px;
         }
 
-        #ui-audio label { 
-            writing-mode: vertical-rl; 
-            text-orientation: mixed; 
-            font-size: 9px; 
-            letter-spacing: 2px; 
-            color: #4cc9f0; 
+        #ui-audio label {
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            font-size: 9px;
+            letter-spacing: 2px;
+            color: #4cc9f0;
             font-weight: bold;
             margin-bottom: 5px;
         }
 
         #vol {
             -webkit-appearance: none;
-            width: 100px; 
+            width: 100px;
             height: 6px;
             background: #0f3460;
             border-radius: 5px;
             outline: none;
             transform: rotate(-90deg);
-            margin: 40px 0; 
+            margin: 40px 0;
             cursor: pointer;
         }
 
         #vol::-webkit-slider-thumb {
             -webkit-appearance: none;
-            width: 16px; 
+            width: 16px;
             height: 16px;
             background: #e91e63;
             border-radius: 50%;
@@ -146,7 +147,6 @@ html>
         .data-table td { padding: 8px; border-bottom: 1px solid #0f3460; text-align: left; }
         .data-table b { color: #4cc9f0; }
 
-        /* Mini Galería (Equipamiento) */
         .mini-fotos-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -170,11 +170,11 @@ html>
         }
         .galeria-fotos img:hover { transform: scale(1.05); }
 
-        /* --- SECCIÓN VIDEOS (De dos en dos) --- */
+        /* --- SECCIÓN VIDEOS --- */
         .video-wall {
             display: grid;
-            grid-template-columns: 1fr 1fr; 
-            gap: 20px; 
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
             margin-top: 20px;
         }
 
@@ -187,13 +187,13 @@ html>
         }
 
         .video-box {
-            width: 100%; 
+            width: 100%;
             border: 2px solid #e91e63;
             border-radius: 10px;
             display: block;
         }
 
-        /* --- RESEÑAS PÚBLICAS --- */
+        /* --- RESEÑAS --- */
         .review-input-area {
             background: rgba(15, 52, 96, 0.6);
             padding: 15px;
@@ -227,27 +227,26 @@ html>
             border-left: 3px solid #4cc9f0;
         }
 
-        /* --- STICKERS (ESPACIADOS HASTA RESEÑAS) --- */
+        /* --- STICKERS --- */
         .sticker {
-            position: absolute; 
-            cursor: pointer; 
-            border: 3px solid #e91e63; 
-            border-radius: 50%; 
-            width: 100px; 
-            height: 100px; 
-            object-fit: cover; 
-            transition: 0.3s; 
+            position: absolute;
+            cursor: pointer;
+            border: 3px solid #e91e63;
+            border-radius: 50%;
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            transition: 0.3s;
             z-index: 50;
         }
         .sticker:hover { transform: scale(1.2) rotate(15deg); box-shadow: 0 0 30px #e91e63; }
-        
-        /* Posiciones con espacio masivo entre ellos */
+       
         #s1 { top: 150px; left: 20px; }
-        #s2 { top: 550px; left: 20px; } 
-        #s3 { top: 950px; left: 20px; } 
-        #s4 { top: 1350px; left: 20px; } 
-        #s5 { top: 1750px; left: 20px; } /* Nuevo */
-        #s6 { top: 2150px; left: 20px; } /* Nuevo - Cerca de reseñas */
+        #s2 { top: 550px; left: 20px; }
+        #s3 { top: 950px; left: 20px; }
+        #s4 { top: 1350px; left: 20px; }
+        #s5 { top: 1750px; left: 20px; }
+        #s6 { top: 2150px; left: 20px; }
 
         /* --- LIGHTBOX --- */
         #lightbox {
@@ -255,6 +254,17 @@ html>
         }
         #lightbox img { max-width: 90%; max-height: 90%; border: 3px solid white; border-radius: 10px; }
 
+        @media (max-width: 850px) {
+            body { padding: 10px; }
+            h1 { font-size: 2.2em; gap: 5px; }
+            .game-container { grid-template-columns: 1fr; }
+            .character-card { position: relative; top: 0; margin-bottom: 20px; order: -1; }
+            .video-wall { grid-template-columns: 1fr; }
+            .sticker { width: 70px; height: 70px; left: 5px; opacity: 0.6; }
+            .lore-column { padding: 20px; margin-left: 15px; }
+            #ui-audio { top: 10px; right: 10px; padding: 10px 5px; }
+            #vol { width: 70px; margin: 25px 0; }
+        }
     </style>
 </head>
 <body>
@@ -271,13 +281,13 @@ html>
     <div class="game-container">
         <div class="lore-column">
             <h1 class="arcoiris-text">SAMUEL <span class="alias-text">alias ElPerronismo</span></h1>
-            
+           
             <p><i>"Un aliado legendario que aparece en los momentos de crisis y en las mejores fiestas."</i></p>
-            
+           
             <h2>Estadísticas de Personaje</h2>
             <p>Amistad:</p>
             <div class="stat-bar"><div class="stat-fill" style="width: 100%;"></div><div class="stat-label">MAX LVL</div></div>
-            
+           
             <p>Lealtad:</p>
             <div class="stat-bar"><div class="stat-fill" style="width: 98%;"></div><div class="stat-label">98/100</div></div>
 
@@ -306,8 +316,8 @@ html>
             <div class="galeria-fotos">
                 <img src="furro.jpg.jpeg" alt="Foto 1" onclick="openImg(this.src)">
                 <img src="amimegustalapepsi.jpeg" alt="Foto 2" onclick="openImg(this.src)">
-                <img src="pdjsnodurannada.jpeg" alt="Foto 3" onclick="openImg(this.src)"> 
-                <img src="ltanga.jpeg" alt="Foto 4" onclick="openImg(this.src)"> 
+                <img src="pdjsnodurannada.jpeg" alt="Foto 3" onclick="openImg(this.src)">
+                <img src="ltanga.jpeg" alt="Foto 4" onclick="openImg(this.src)">
                 <img src="losniños.jpeg" alt="Extra 1" onclick="openImg(this.src)">
                 <img src="RobloxScreenShot20260307_005510959.png" alt="Extra 2" onclick="openImg(this.src)">
                 <img src="samuelmyyo.png" alt="Extra 3" onclick="openImg(this.src)">
@@ -315,23 +325,20 @@ html>
             </div>
 
             <h2>Registros de Video</h2>
-            
+           
             <div class="video-wall">
                 <div class="video-container">
                     <p><b>Misión 1:</b></p>
                     <video class="video-box" controls><source src="ti.mp4.mp4" type="video/mp4"></video>
                 </div>
-
                 <div class="video-container">
                     <p><b>Misión 2:</b></p>
                     <video class="video-box" controls><source src="WhatsApp Video 2026-02-15 at 1.25.29 PM.mp4" type="video/mp4"></video>
                 </div>
-
                 <div class="video-container">
                     <p><b>Misión 3:</b></p>
                     <video class="video-box" controls><source src="valiente.mp4" type="video/mp4"></video>
                 </div>
-
                 <div class="video-container">
                     <p><b>Misión 4:</b></p>
                     <video class="video-box" controls><source src="pinguinogei.mp4" type="video/mp4"></video>
@@ -343,9 +350,8 @@ html>
                 <div class="video-container">
                     <p><b>Misión 6:</b></p>
                     <video class="video-box" controls><source src="samuelrotatorio.mp4" type="video/mp4"></video>
-                
                 </div>
-            </div> 
+            </div>
 
             <h2>Muro de Reseñas</h2>
             <div class="review-input-area">
@@ -356,7 +362,6 @@ html>
             <div id="reviews-wall">
                 <div class="reseña-card"><b>@Admin:</b> El sistema de reseñas está online.</div>
             </div>
-
         </div>
 
         <div class="character-card">
@@ -389,50 +394,79 @@ html>
     <audio id="bgm" src="YTDown.com_YouTube_001-Once-Upon-a-Time-UNDERTALE-Soundtrac_Media_0AQMAth2gio_008_128k.m4a" loop></audio>
     <audio id="sfx"></audio>
 
+    <!-- 1. SCRIPT GENERAL (Audio y Lightbox) -->
     <script>
         const bgm = document.getElementById('bgm');
         const sfx = document.getElementById('sfx');
         const volControl = document.getElementById('vol');
         const videos = document.querySelectorAll('video');
 
-        document.body.onclick = () => { 
-            if(bgm.paused) {
-                bgm.play();
-                bgm.volume = volControl.value;
-            }
-        };
-
-        volControl.oninput = (e) => { 
-            bgm.volume = e.target.value; 
-        };
-
+        document.body.onclick = () => { if(bgm.paused) { bgm.play(); bgm.volume = volControl.value; } };
+        volControl.oninput = (e) => { bgm.volume = e.target.value; };
         videos.forEach(v => {
             v.onplay = () => { bgm.volume = volControl.value * 0.1; };
             v.onpause = () => { bgm.volume = volControl.value; };
             v.onended = () => { bgm.volume = volControl.value; };
         });
-
         function playSfx(src) { sfx.src = src; sfx.play(); }
-
         function openImg(src) {
             const lb = document.getElementById('lightbox');
-            const lbImg = document.getElementById('lightbox-img');
+            document.getElementById('lightbox-img').src = src;
             lb.style.display = 'flex';
-            lbImg.src = src;
-        }
-
-        function addReview() {
-            const name = document.getElementById('rev-name').value;
-            const text = document.getElementById('rev-text').value;
-            const wall = document.getElementById('reviews-wall');
-            if(name === "" || text === "") { alert("Escribe algo primero"); return; }
-            const card = document.createElement('div');
-            card.className = 'reseña-card';
-            card.innerHTML = `<b>@${name}:</b> ${text}`;
-            wall.prepend(card);
-            document.getElementById('rev-name').value = "";
-            document.getElementById('rev-text').value = "";
         }
     </script>
+
+    <!-- 2. SCRIPT DE FIREBASE (Base de datos en la nube) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
+        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBcRbQEBYDmiHVz-CPLYKslc3GIKT1NSiQ",
+            authDomain: "elperronismo-web.firebaseapp.com",
+            projectId: "elperronismo-web",
+            storageBucket: "elperronismo-web.firebasestorage.app",
+            messagingSenderId: "904756395919",
+            appId: "1:904756395919:web:a4d9e7fa0a6843fbb295fa"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Conectamos la función al botón del HTML
+        window.addReview = async function() {
+            const name = document.getElementById('rev-name').value;
+            const text = document.getElementById('rev-text').value;
+
+            if (name === "" || text === "") { 
+                alert("¡Escribe algo primero!"); 
+                return; 
+            }
+
+            try {
+                // Guardar en Firebase
+                await addDoc(collection(db, "resenas"), {
+                    usuario: name,
+                    comentario: text,
+                    fecha: new Date()
+                });
+                
+                // Mostrar en pantalla
+                const card = document.createElement('div');
+                card.className = 'reseña-card';
+                card.innerHTML = `<b>@${name}:</b> ${text}`;
+                document.getElementById('reviews-wall').prepend(card);
+                
+                document.getElementById('rev-name').value = "";
+                document.getElementById('rev-text').value = "";
+                
+                alert("¡Reseña guardada en la nube!");
+            } catch (e) {
+                console.error("Error: ", e);
+                alert("Error al conectar con la base de datos.");
+            }
+        }
+    </script>
+
 </body>
-</html>
+</html> 1
